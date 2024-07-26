@@ -1,98 +1,124 @@
-//? User data storage
+//? data storage
 const users = [];
-
-//? choose an option   
-function choose() {
-  while (true) {
-    const choice = prompt("Choose an option: signup, login, change password, exit");
-    if (choice === "signup") {
-      signUp();
-    } else if (choice === "login") {
-      login();
-    } else if (choice === "change password") {
-      
-    } else if (choice === "exit") {
-      break;
-    } else {
-      console.log("Invalid choice");
-    }
-  }
-}
-
-choose();
 
 //? Function to prompt user input
 //* get the input frm the user nd return it after removing whitespace
 function promptUser(message) {
-return prompt(message).trim();
+    return prompt(message).trim();
 }
 
-//? validate name  
-function checkName(name) {
-    if (name !== name.trim()); //! Check that there are no spaces at the beginning or end
-    if (name.length < 5); //! Do not register the Name if it has fewer than 5 characters *(excluding spaces)* 
-    if (/[\d@!#$%^&*(),.?":{}|<>]/.test(name)); //!  Do not register the Name if it contains numbers, an @, or similar special characters.
+//? Validate name
+const checkName = (name) => {
+    if (name !== name.trim()) return false; //! Check that there are no spaces at the beginning or end
+    if (name.length < 5) return false; //! Do not register the Name if it has fewer than 5 characters *(excluding spaces)* 
+    if (/[\d@!#$%^&*(),.?":{}|<>]/.test(name)) return false; //!  Do not register the Name if it contains numbers, an @, or similar special characters.
     const elements = name.split(' ');
     for (let e of elements) {
-        if (e.charAt(0) !== e.charAt(0).toUpperCase()); //!The first letter must be uppercase
-        if (e.slice(1) !== e.slice(1).toLowerCase()); //! All other characters must be lowercase
+        if (e.charAt(0) !== e.charAt(0).toUpperCase()) return false; //!The first letter must be uppercase nd All other characters must be lowercase
+        if (e.slice(1) !== e.slice(1).toLowerCase()) return false; 
     }
     return true;
 }
 
-//? validate email
- function checkEmail(email) {
-        if (email !== email.trim()) ; //! Check that there are no spaces at the beginning or end
-        if (email.length < 10) ; //! Do not register the Email if it has fewer than 10 characters (excluding spaces)
-        if (!/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(email)) ; //! Check email format and ensure it has exactly one @
-        if (users.some(user => user.email === email)) ; //! The email must be unique
-        return true;
-    }
+//? Validate email
+const checkEmail = (email) => {
+    if (email !== email.trim()) return false; //! Check that there are no spaces at the beginning or end
+    if (email.length < 10) return false;  //! Do not register the Email if it has fewer than 10 characters (excluding spaces)
+    if (!/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(email)) return false; //! Check email format and ensure it has exactly one @
+    if (users.some(user => user.email === email)) return false; //! The email must be unique
+    return true;
+    return true;
+}
 
 //? Validate age
-function checkAge(age) {
-    if (age !== age.trim()) ; //! Check that there are no spaces at the beginning, end, or in the middle
-    if (!/^\d+$/.test(age)) ; //! Ensure only numbers are entered
-    if (age.length === 0 || age.length >= 3) ; //! Do not register the Age if it has 0 characters, or if it has 3 or more characters
+const checkAge = (age) => {
+    if (age !== age.trim()) return false; //! Check that there are no spaces at the beginning, end, or in the middle
+    if (!/^\d+$/.test(age)) return false; //! Ensure only numbers are entered
+    if (age.length === 0 || age.length >= 3) return false; //! Do not register the Age if it has 0 characters, or if it has 3 or more characters
     return true;
 }
-
 
 //? Validate password
-function checkPassword(password) {
-    if (password !== password.trim()); //! Check that there are no spaces at the beginning or end
-    if (/\s/.test(password)); //! Do not register the Password if there is a space in the middle
-    if (!/[!@#\-+*/]/.test(password)); //! It must contain at least one special character from: ["@" , "#" , "-" , "+" , "*" , "/"]
-    if (password.length < 7); //! It must be at least 7 characters long
+const checkPassword = (password) => {
+    if (password !== password.trim()) return false; //! Check that there are no spaces at the beginning or end
+    if (/\s/.test(password)) return false; //! Do not register the Password if there is a space in the middle
+    if (!/[!@#\-+*/]/.test(password)) return false; //! It must contain at least one special character from: ["@" , "#" , "-" , "+" , "*" , "/"]
+    if (password.length < 7) return false; //! It must be at least 7 characters long
     return true;
 }
-
-//? sign up 
-function signUp() {
+//* If the user chooses to sign up
+//? Sign up function
+const signUp = () => {
     let name = promptUser("Enter your full name:");
     while (!checkName(name)) {
-    name = promptUser("enter ur name again");
+        name = promptUser("Invalid name. Enter your full name again:");
     }
+
     let email = promptUser("Enter your email:");
     while (!checkEmail(email)) {
-        email = promptUser("Enter your email again");
+        email = promptUser("Invalid email. Enter your email again:");
     }
-    
+
     let age = promptUser("Enter your age:");
     while (!checkAge(age)) {
-        age = promptUser("enter ur age again");
+        age = promptUser("Invalid age. Enter your age again:");
     }
-    
+
     let password = promptUser("Enter your password:");
     while (!checkPassword(password)) {
-        password = promptUser("Enter your password again");
+        password = promptUser("Invalid password. Enter your password again:");
     }
-    
-    let confirmPassword = promptUser("Confirm your password");
+
+    let confirmPassword = promptUser("Confirm your password:");
     while (password !== confirmPassword) {
-        confirmPassword = promptUser("Passwords do not match. try again");
+        confirmPassword = promptUser("Passwords do not match. Confirm your password again:");
     }
-    //! registeration
+
+    //! Register the user
     users.push({ name, email, age, password });
     alert("User registered successfully!");
 }
+
+//*  If the user chooses to log in
+//? Log in function
+const login = () => {
+    let email = promptUser("Enter your email:");
+    let user = users.find(user => user.email === email);
+    if (!user) {
+        console.log("Email not found.");
+        return;
+    }
+
+    let password = promptUser("Enter your password:");
+    if (user.password !== password) {
+        console.log("Incorrect password.");
+        return;
+    }
+
+    console.log("Logged in successfully.");
+}
+
+
+
+
+
+
+//? choose an option
+const choose = () => {
+    while (true) {
+        const choice = promptUser("Choose an option: signup, login, change password, exit");
+        if (choice === "signup") {
+            signUp();
+        } else if (choice === "login") {
+            login();
+        } else if (choice === "change password") {
+            changePassword();
+        } else if (choice === "exit") {
+            break;
+        } else {
+            console.log("Invalid choice.");
+        }
+    }
+}
+
+choose();
