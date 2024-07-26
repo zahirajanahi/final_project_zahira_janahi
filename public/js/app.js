@@ -99,7 +99,29 @@ const login = () => {
 }
 
 
+//*  If the user chooses to change the password
+//? Change password function
+const changePassword = () => {
+    let email = promptUser("Enter your email:");
+    let user = users.find(user => user.email === email);
+    if (!user) {
+        console.log("Email not found.");
+        return;
+    }
 
+    let newPassword = promptUser("Enter new password:");
+    while (!checkPassword(newPassword)) {
+        newPassword = promptUser("Invalid password. Enter new password again:");
+    }
+
+    let confirmPassword = promptUser("Confirm new password:");
+    while (newPassword !== confirmPassword) {
+        confirmPassword = promptUser("Passwords do not match. Confirm new password again:");
+    }
+
+    user.password = newPassword;
+    console.log("Password changed successfully.");
+}
 
 
 
