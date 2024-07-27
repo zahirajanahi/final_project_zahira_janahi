@@ -144,3 +144,26 @@ const choose = () => {
 }
 
 choose();
+
+const Services = (user) => {
+    while (true) {
+        const choice = promptUser("Choose an option: balance, withdraw, deposit, loan, invest, history, logout");
+        if (choice === "balance") {
+            console.log(`Your balance is: ${user.balance} dirhams`);
+        } else if (choice === "withdraw") {
+            let amount = parseFloat(promptUser("Enter amount to withdraw:"));
+            if (amount > user.balance) {
+                console.log("Insufficient balance.");
+            } else {
+                user.balance -= amount;
+                user.transactionHistory.push({ type: 'withdraw', amount });
+                console.log(`Withdrawn: ${amount} dirhams`);
+            }
+        } else if (choice === "logout") {
+            console.log("Logged out successfully.");
+            break;
+        } else {
+            console.log("Invalid choice.");
+        }
+    }
+}
